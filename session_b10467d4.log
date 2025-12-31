@@ -1,0 +1,146 @@
+2025-12-31 22:03:55,439 [INFO] reply_optimizer.session_b10467d4-b18c-4f1f-aafd-f0da39cfd6a1 | mailbox:- | thread:-: Datadog initialized
+2025-12-31 22:03:56,799 [INFO] reply_optimizer.session_b10467d4-b18c-4f1f-aafd-f0da39cfd6a1 | mailbox:- | thread:-: Datadog initialized
+2025-12-31 22:04:05,456 [ERROR] reply_optimizer.session_b10467d4-b18c-4f1f-aafd-f0da39cfd6a1 | mailbox:riplerrcup@gmail.com | thread:-: IMAP error
+Traceback (most recent call last):
+  File "/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/asyncio/tasks.py", line 500, in wait_for
+    return fut.result()
+           ^^^^^^^^^^^^
+  File "/Users/nykolaymelnyk/PycharmProjects/portfolio/.venv/lib/python3.11/site-packages/aioimaplib/aioimaplib.py", line 626, in wait
+    await self.state_condition.wait_for(lambda: state_re.match(self.state))
+  File "/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/asyncio/locks.py", line 294, in wait_for
+    await self.wait()
+  File "/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/asyncio/locks.py", line 267, in wait
+    await fut
+asyncio.exceptions.CancelledError
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/Users/nykolaymelnyk/PycharmProjects/portfolio/ReplyOptimizer/worker/worker.py", line 249, in imap_worker
+    await client.wait_hello_from_server()
+  File "/Users/nykolaymelnyk/PycharmProjects/portfolio/.venv/lib/python3.11/site-packages/aioimaplib/aioimaplib.py", line 727, in wait_hello_from_server
+    await asyncio.wait_for(self.protocol.wait('AUTH|NONAUTH'), self.timeout)
+  File "/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/asyncio/tasks.py", line 502, in wait_for
+    raise exceptions.TimeoutError() from exc
+TimeoutError
+2025-12-31 22:04:06,827 [ERROR] reply_optimizer.session_b10467d4-b18c-4f1f-aafd-f0da39cfd6a1 | mailbox:123@gogogo.com | thread:-: IMAP error
+Traceback (most recent call last):
+  File "/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/asyncio/tasks.py", line 500, in wait_for
+    return fut.result()
+           ^^^^^^^^^^^^
+  File "/Users/nykolaymelnyk/PycharmProjects/portfolio/.venv/lib/python3.11/site-packages/aioimaplib/aioimaplib.py", line 626, in wait
+    await self.state_condition.wait_for(lambda: state_re.match(self.state))
+  File "/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/asyncio/locks.py", line 294, in wait_for
+    await self.wait()
+  File "/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/asyncio/locks.py", line 267, in wait
+    await fut
+asyncio.exceptions.CancelledError
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/Users/nykolaymelnyk/PycharmProjects/portfolio/ReplyOptimizer/worker/worker.py", line 249, in imap_worker
+    await client.wait_hello_from_server()
+  File "/Users/nykolaymelnyk/PycharmProjects/portfolio/.venv/lib/python3.11/site-packages/aioimaplib/aioimaplib.py", line 727, in wait_hello_from_server
+    await asyncio.wait_for(self.protocol.wait('AUTH|NONAUTH'), self.timeout)
+  File "/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/asyncio/tasks.py", line 502, in wait_for
+    raise exceptions.TimeoutError() from exc
+TimeoutError
+2025-12-31 22:25:02,565 [INFO] reply_optimizer.session_b10467d4-b18c-4f1f-aafd-f0da39cfd6a1 | mailbox:- | thread:-: Datadog initialized
+2025-12-31 22:25:04,078 [INFO] reply_optimizer.session_b10467d4-b18c-4f1f-aafd-f0da39cfd6a1 | mailbox:- | thread:-: Datadog initialized
+2025-12-31 22:29:12,680 [INFO] reply_optimizer.session_b10467d4-b18c-4f1f-aafd-f0da39cfd6a1 | mailbox:- | thread:-: Datadog initialized
+2025-12-31 22:29:14,302 [INFO] reply_optimizer.session_b10467d4-b18c-4f1f-aafd-f0da39cfd6a1 | mailbox:- | thread:-: Datadog initialized
+2025-12-31 22:29:22,701 [ERROR] reply_optimizer.session_b10467d4-b18c-4f1f-aafd-f0da39cfd6a1 | mailbox:123@gogogo.com | thread:-: IMAP error
+Traceback (most recent call last):
+  File "/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/asyncio/tasks.py", line 500, in wait_for
+    return fut.result()
+           ^^^^^^^^^^^^
+  File "/Users/nykolaymelnyk/PycharmProjects/portfolio/.venv/lib/python3.11/site-packages/aioimaplib/aioimaplib.py", line 626, in wait
+    await self.state_condition.wait_for(lambda: state_re.match(self.state))
+  File "/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/asyncio/locks.py", line 294, in wait_for
+    await self.wait()
+  File "/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/asyncio/locks.py", line 267, in wait
+    await fut
+asyncio.exceptions.CancelledError
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/Users/nykolaymelnyk/PycharmProjects/portfolio/ReplyOptimizer/worker/worker.py", line 249, in imap_worker
+    await client.wait_hello_from_server()
+  File "/Users/nykolaymelnyk/PycharmProjects/portfolio/.venv/lib/python3.11/site-packages/aioimaplib/aioimaplib.py", line 727, in wait_hello_from_server
+    await asyncio.wait_for(self.protocol.wait('AUTH|NONAUTH'), self.timeout)
+  File "/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/asyncio/tasks.py", line 502, in wait_for
+    raise exceptions.TimeoutError() from exc
+TimeoutError
+2025-12-31 22:29:24,328 [ERROR] reply_optimizer.session_b10467d4-b18c-4f1f-aafd-f0da39cfd6a1 | mailbox:riplerrcup@gmail.com | thread:-: IMAP error
+Traceback (most recent call last):
+  File "/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/asyncio/tasks.py", line 500, in wait_for
+    return fut.result()
+           ^^^^^^^^^^^^
+  File "/Users/nykolaymelnyk/PycharmProjects/portfolio/.venv/lib/python3.11/site-packages/aioimaplib/aioimaplib.py", line 626, in wait
+    await self.state_condition.wait_for(lambda: state_re.match(self.state))
+  File "/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/asyncio/locks.py", line 294, in wait_for
+    await self.wait()
+  File "/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/asyncio/locks.py", line 267, in wait
+    await fut
+asyncio.exceptions.CancelledError
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/Users/nykolaymelnyk/PycharmProjects/portfolio/ReplyOptimizer/worker/worker.py", line 249, in imap_worker
+    await client.wait_hello_from_server()
+  File "/Users/nykolaymelnyk/PycharmProjects/portfolio/.venv/lib/python3.11/site-packages/aioimaplib/aioimaplib.py", line 727, in wait_hello_from_server
+    await asyncio.wait_for(self.protocol.wait('AUTH|NONAUTH'), self.timeout)
+  File "/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/asyncio/tasks.py", line 502, in wait_for
+    raise exceptions.TimeoutError() from exc
+TimeoutError
+2025-12-31 23:01:52,785 [INFO] reply_optimizer.session_b10467d4-b18c-4f1f-aafd-f0da39cfd6a1 | mailbox:- | thread:-: Datadog initialized
+2025-12-31 23:01:55,764 [INFO] reply_optimizer.session_b10467d4-b18c-4f1f-aafd-f0da39cfd6a1 | mailbox:- | thread:-: Datadog initialized
+2025-12-31 23:02:02,805 [ERROR] reply_optimizer.session_b10467d4-b18c-4f1f-aafd-f0da39cfd6a1 | mailbox:123@gogogo.com | thread:-: IMAP error
+Traceback (most recent call last):
+  File "/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/asyncio/tasks.py", line 500, in wait_for
+    return fut.result()
+           ^^^^^^^^^^^^
+  File "/Users/nykolaymelnyk/PycharmProjects/portfolio/.venv/lib/python3.11/site-packages/aioimaplib/aioimaplib.py", line 626, in wait
+    await self.state_condition.wait_for(lambda: state_re.match(self.state))
+  File "/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/asyncio/locks.py", line 294, in wait_for
+    await self.wait()
+  File "/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/asyncio/locks.py", line 267, in wait
+    await fut
+asyncio.exceptions.CancelledError
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/Users/nykolaymelnyk/PycharmProjects/portfolio/ReplyOptimizer/worker/worker.py", line 249, in imap_worker
+    await client.wait_hello_from_server()
+  File "/Users/nykolaymelnyk/PycharmProjects/portfolio/.venv/lib/python3.11/site-packages/aioimaplib/aioimaplib.py", line 727, in wait_hello_from_server
+    await asyncio.wait_for(self.protocol.wait('AUTH|NONAUTH'), self.timeout)
+  File "/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/asyncio/tasks.py", line 502, in wait_for
+    raise exceptions.TimeoutError() from exc
+TimeoutError
+2025-12-31 23:02:05,790 [ERROR] reply_optimizer.session_b10467d4-b18c-4f1f-aafd-f0da39cfd6a1 | mailbox:123@gogogo.com | thread:-: IMAP error
+Traceback (most recent call last):
+  File "/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/asyncio/tasks.py", line 500, in wait_for
+    return fut.result()
+           ^^^^^^^^^^^^
+  File "/Users/nykolaymelnyk/PycharmProjects/portfolio/.venv/lib/python3.11/site-packages/aioimaplib/aioimaplib.py", line 626, in wait
+    await self.state_condition.wait_for(lambda: state_re.match(self.state))
+  File "/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/asyncio/locks.py", line 294, in wait_for
+    await self.wait()
+  File "/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/asyncio/locks.py", line 267, in wait
+    await fut
+asyncio.exceptions.CancelledError
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/Users/nykolaymelnyk/PycharmProjects/portfolio/ReplyOptimizer/worker/worker.py", line 249, in imap_worker
+    await client.wait_hello_from_server()
+  File "/Users/nykolaymelnyk/PycharmProjects/portfolio/.venv/lib/python3.11/site-packages/aioimaplib/aioimaplib.py", line 727, in wait_hello_from_server
+    await asyncio.wait_for(self.protocol.wait('AUTH|NONAUTH'), self.timeout)
+  File "/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/asyncio/tasks.py", line 502, in wait_for
+    raise exceptions.TimeoutError() from exc
+TimeoutError

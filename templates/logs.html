@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Dashboard: Logs</title>
+    <link rel="stylesheet" href="logs.css">
+</head>
+<body>
+    <main class="content">
+        <div class="container">
+            <div class="header">
+                Logs
+                <div class="download_button" onclick="downloadLogs()">
+                    ↓ Download
+                </div>
+            </div>
+
+            <div class="log-box" id="logBox">
+                <span class="loading">Logs loading...</span>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        async function loadLogs() {
+            const logBox = document.getElementById('logBox');
+            logBox.innerHTML = '<span class="loading">Logs loading...</span>';
+
+            try {
+                const response = await fetch('/logs/get?lines=5000');
+                const data = await response.json();
+
+                if (data.success) {
+                    if (data.logs.trim() === '') {
+                        logBox.textContent = 'No logs';
+                    } else {
+                        logBox.textContent = data.logs;
+                    }
+                } else {
+                    logBox.textContent = 'Error: ' + (data.error || 'unknown error');
+                }
+            } catch (err) {
+                logBox.textContent = 'Cannot load logs: ' + err.message;
+            }
+        }
+
+        function downloadLogs() {
+            window.location.href = '/logs/download';
+        }
+
+        window.addEventListener('DOMContentLoaded', loadLogs);
+
+        setInterval(loadLogs, 100000);
+    </script>
+</body>
+</html>

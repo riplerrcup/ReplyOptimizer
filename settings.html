@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Dashboard: Settings</title>
+    <link rel="stylesheet" href="settings.css">
+</head>
+
+<body>
+    <main class="content">
+        <div class="container">
+            <div class="header">Settings</div>
+            <div class="section">
+                <h3>API data</h3>
+                <input class="input" id="gemini" placeholder="Gemini API key">
+                <br><br>
+                <input class="input" id="instructions" placeholder="Gemini answer and behaviour instructions">
+                <br><br>
+                <input class="input" id="dd_api" placeholder="Datadog API key">
+                <br><br>
+                <input class="input" id="dd_site" placeholder="Datadog APP key">
+            </div>
+            <div class="section">
+                <h3>Email Accounts</h3>
+                <input class="input" id="host" placeholder="Primary IMAP host:port">
+                <br><br>
+                <input class="input" id="smtp_host" placeholder="Primary SMTP host:port">
+                <br><br>
+                <div class="imap-list" id="imapList"></div>
+                <br>
+                <button class="btn btn-add" onclick="addImap()">+ Add email</button>
+            </div>
+            <div class="actions">
+                <button class="btn btn-add">Back</button>
+                <button class="btn btn-save" onclick="saveSettings()">Save</button>
+            </div>
+        </div>
+    </main>
+<script>
+    let imap_imap_host = ""
+    let imap_smtp_host = ""
+    function addImap(data = {}) {
+        const list = document.getElementById("imapList");
+
+        const card = document.createElement("div");
+        card.className = "imap-card";
+
+        const [some_imap_host = "", some_imap_port = "993"] = imap_imap_host.split(":");
+        const [some_smtp_host = "", some_smtp_port = "465"] = imap_smtp_host.split(":");
+
+        card.innerHTML = `
+            <div class="remove-btn" onclick="this.parentNode.remove()">X</div>
+
+            <div class="row">
+                <input class="input" placeholder="Email" value="${data.email || ""}">
+                <input class="input" placeholder="Password" value="${data.password || ""}">
+            </div>
+
+            <div class="row">
+                <input class="input" placeholder="IMAP host" value="${data.host || some_imap_host}">
+                <input class="input" placeholder="IMAP port" value="${data.port || some_imap_port}">
+            </div>
+            <div class="row">
+                <input class="input" placeholder="SMTP host" value="${data.smtp_host || some_smtp_host}">
+                <input class="input" placeholder="SMTP port" value="${data.smtp_port || some_smtp_port}">
+            </div>
+        `;
+
+        list.appendChild(card);
+    }
+
+    function saveSettings() {
+        const imapCards = document.querySelectorAll(".imap-card");
+        const imaps = [];
+
+        imapCards.forEach(card => {
+            const inputs = card.querySelectorAll("input");
+            imaps.push({
+                email: inputs[0].value,
+                password: inputs[1].value,
+                host: inputs[2].value + ":" + inputs[3].value,
+                smtp_host: inputs[4].value + ":" + inputs[5].value
+            });
+        });
+
+        const payload = {
+            gemini_key: document.getElementById("gemini").value,
+            datadog_api_key: document.getElementById("dd_api").value,
+            datadog_site: document.getElementById("dd_site").value,
+            primary_host: document.getElementById("host").value,
+            primary_smtp_host: document.getElementById("smtp_host").value,
+            instructions: document.getElementById("instructions").value,
+            imap_keys: imaps
+        };
+
+        fetch("/settings/update", {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify(payload),
+            credentials: 'include'
+        }).then(response => {
+            return response.json()
+        }).then(data => {
+            if (data.success) {
+                alert("Successfully saved")
+            } else {
+                alert("Error")
+            }
+        })
+    }
+
+    function loadSettings() {
+        try {
+            fetch("/settings", {credentials: 'include'})
+                .then(res => res.json())
+                .then(data => {
+                    if (!data.success) return;
+
+                    document.getElementById("gemini").value = data.gemini_key || "";
+                    document.getElementById("dd_api").value = data.datadog_api_key || "";
+                    document.getElementById("dd_site").value = data.datadog_site || "";
+
+                    document.getElementById("host").value = data.imap_primary_host || "";
+                    imap_imap_host = data.imap_primary_host || "";
+                    document.getElementById("smtp_host").value = data.smtp_primary_host || "";
+                    imap_smtp_host = data.smtp_primary_host || "";
+                    document.getElementById("instructions").value = data.instructions
+
+                    if (Array.isArray(data.imap_accounts)) {
+                        data.imap_accounts.forEach(account => addImap(account));
+                    }
+                })
+                .catch(err => console.error("Failed to load settings:", err));
+        } catch (err) {
+            console.error("Failed to load settings:", err)
+        }
+    }
+</script>
+
+</body>
+</html>

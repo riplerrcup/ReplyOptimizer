@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Reply Optimizer: Dashboard</title>
+</head>
+<body>
+    <div class="layout">
+        <aside class="sidebar">
+            <h2>Dashboard</h2>
+            <div class="nav-item" data-page="mails">Mails</div>
+            <div class="nav-item" data-page="settings">Settings</div>
+            <div class="nav-item active" data-page="logs">Logs</div>
+        </aside>
+
+        <main class="content">
+            <div class="content-area" id="content-area">
+                <!-- Здесь будет подгружаться нужная страница -->
+                <div id="page-content"></div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        const pages = {
+            mails: "/mails.html",
+            settings: "/settings.html",
+            logs: "/logs.html"
+        };
+
+        async function loadPage(pageName) {
+            const container = document.getElementById('page-content');
+            const url = pages[pageName];
+
+            document.querySelectorAll('.nav-item').forEach(el => {
+                el.classList.remove('active');
+                if (el.dataset.page === pageName) {
+                    el.classList.add('active');
+                }
+            });
+
+            try {
+                const response = await fetch(url);
+                if (!response.ok) throw new Error(`HTTP ${response.status}`);
+                const html = await response.text();
+
+                container.innerHTML = html;
+
+                const scripts = container.querySelectorAll('script');
+
+                Array.from(scripts).forEach(oldScript => {
+                    const newScript = document.createElement('script');
+
+                    if (oldScript.textContent) {
+                        newScript.textContent = oldScript.textContent;
+                    }
+
+                    Array.from(oldScript.attributes).forEach(attr => {
+                        newScript.setAttribute(attr.name, attr.value);
+                    });
+
+                    oldScript.parentNode.replaceChild(newScript, oldScript);
+                });
+
+                if (pageName === 'mails' && typeof loadMailView === 'function') {
+                    loadMailView();
+                }
+                if (pageName === 'logs' && typeof loadLogs === 'function') {
+                    loadLogs();
+                }
+                if (pageName === 'settings' && typeof loadSettings === 'function') {
+                    loadSettings();
+                }
+
+            } catch (err) {
+                console.error("Load page error:", err);
+                container.innerHTML = `<p style="color: red; padding: 20px;">Ошибка загрузки страницы: ${err.message}</p>`;
+            }
+        }
+
+        document.querySelectorAll('.nav-item[data-page]').forEach(item => {
+            item.addEventListener('click', () => {
+                const page = item.dataset.page;
+                loadPage(page);
+            });
+        });
+
+        document.addEventListener('DOMContentLoaded', () => {
+            loadPage('mails');
+        });
+    </script>
+</body>
+</html>

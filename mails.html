@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Dashboard: Mails</title>
+    <link rel="stylesheet" href="mails.css">
+</head>
+<body>
+    <main class="content" id="main-content">
+        <div id="mail-interface"></div>
+    </main>
+
+    <script>
+        let currentThreadId = null;
+
+        async function loadMailView(threadId = null) {
+            const container = document.getElementById('mail-interface');
+            const url = threadId ? `/thread/${threadId}` : '/inbox';
+
+            try {
+                const response = await fetch(url);
+                const data = await response.json();
+
+                if (threadId) {
+                    renderChatView(container, data);
+                    currentThreadId = threadId;
+                } else {
+                    renderInboxView(container, data.accounts, data.threads);
+                }
+            } catch (err) {
+                container.innerHTML = '<p>Error loading data</p>';
+            }
+        }
+
+        function renderInboxView(container, accounts, threads) {
+            container.innerHTML = '';
+
+            const imapList = document.createElement('div');
+            imapList.className = 'imap_list';
+
+            const listContainer = document.createElement('div');
+            listContainer.className = 'container';
+            listContainer.id = 'thread-list';
+
+            accounts.forEach(acc => {
+                const el = document.createElement('div');
+                el.className = 'imap_element';
+                el.textContent = acc.mail;
+
+                el.addEventListener('click', () => {
+                    document.querySelectorAll('.imap_element').forEach(e => e.classList.remove('active'));
+                    el.classList.add('active');
+                    renderThreadList(listContainer, threads[acc.mail]?.messages || []);
+                });
+
+                imapList.appendChild(el);
+            });
+
+            container.appendChild(imapList);
+            container.appendChild(listContainer);
+
+            if (accounts.length > 0) {
+                const firstEl = imapList.querySelector('.imap_element');
+                firstEl.classList.add('active');
+                renderThreadList(listContainer, threads[accounts[0].mail]?.messages || []);
+            }
+        }
+
+        function renderThreadList(container, messages) {
+            container.innerHTML = '';
+
+            if (messages.length === 0) {
+                container.innerHTML = '<p style="padding: 20px; color: #ccc;">No messages</p>';
+                return;
+            }
+
+            messages.forEach(thread => {
+                const btn = document.createElement('button');
+                btn.className = 'mail_button';
+                btn.dataset.threadId = thread.thread_id;
+
+                btn.innerHTML = `
+                    <div class="mail_subject">${thread.subject || '(No subject)'}</div>
+                    <div class="mail_sender">${thread.sender}</div>
+                    <div class="mail_preview">${thread.preview}</div>
+                `;
+
+                btn.addEventListener('click', () => loadThread(thread.thread_id));
+                container.appendChild(btn);
+            });
+        }
+
+        async function loadThread(threadId) {
+            const mainContainer = document.getElementById('mail-interface');
+
+            try {
+                const response = await fetch(`/thread/${threadId}`);
+                const data = await response.json();
+
+                renderChatView(mainContainer, data);
+            } catch (err) {
+                console.error(err);
+                mainContainer.innerHTML = '<p>Error loading thread</p>';
+            }
+        }
+
+        function renderChatView(container, messages) {
+            const backBtn = document.createElement('button');
+            backBtn.id = 'back-to-inbox';
+            backBtn.textContent = '← Back';
+            backBtn.style.cssText = 'margin: 20px; padding: 10px; font-size: 16px;';
+
+            const chatView = document.createElement('div');
+            chatView.className = 'chat_view';
+            chatView.appendChild(backBtn);
+
+            const chatMessages = document.createElement('div');
+            chatMessages.className = 'chat_messages';
+
+            messages.forEach(msg => {
+                const msgEl = document.createElement('div');
+                msgEl.className = `chat_message ${msg.type}`;
+
+                const label = document.createElement('div');
+                label.className = 'chat_label';
+                label.textContent = msg.type === 'incoming' ? msg.sender : 'Gemini answer';
+
+                const bubble = document.createElement('div');
+                bubble.className = 'chat_bubble';
+                bubble.textContent = msg.message;
+
+                msgEl.append(label, bubble);
+                chatMessages.appendChild(msgEl);
+            });
+
+            chatView.appendChild(chatMessages);
+            container.innerHTML = '';
+            container.appendChild(chatView);
+        }
+
+        document.addEventListener('click', (e) => {
+            if (e.target.id === 'back-to-inbox') {
+                loadMailView();
+            }
+        });
+
+        document.addEventListener('DOMContentLoaded', () => loadMailView());
+    </script>
+</body>
+</html>

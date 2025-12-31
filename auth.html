@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>ReplyOptimizer</title>
+    <link rel="stylesheet" href="auth.css">
+</head>
+<body>
+
+<h1 class="action_text">Enter your API keys</h1>
+
+<div class="main_container">
+    <div class="data-input_container">
+        <label class="input_labels">
+            <input type="text" class="input_label" name="datadog_key" placeholder="Your Datadog key">
+            <input type="text" class="input_label" name="datadog_site" placeholder="Your Datadog url(e.g. datadoghq.com)">
+            <input type="text" class="input_label" name="gemini_key" placeholder="Your Gemini key">
+        </label>
+
+        <div class="button_back">Back</div>
+        <div class="button_next">Next</div>
+    </div>
+</div>
+
+<div class="loading-overlay">
+    <svg class="spinner" viewBox="0 0 200 200">
+        <circle cx="100" cy="100" r="80"></circle>
+    </svg>
+</div>
+
+<script>
+    const actionText = document.querySelector('.action_text');
+    const buttonNext = document.querySelector('.button_next');
+    const buttonBack = document.querySelector('.button_back');
+    const loadingOverlay = document.querySelector('.loading-overlay');
+    let inputs = document.querySelectorAll('.input_label');
+
+    let step = 1;
+    buttonBack.style.display = 'none';
+
+    const apiFields = [
+        { name: 'datadog_key', placeholder: 'Your Datadog key' },
+        { name: 'datadog_site', placeholder: 'Your Datadog url(e.g. datadoghq.com)' },
+        { name: 'gemini_key', placeholder: 'Your Gemini key' }
+    ];
+
+    const imapFields = [
+        { name: 'imap_host', placeholder: 'Your IMAP host:port' },
+        { name: 'smtp_host', placeholder: 'Your SMTP host:port' },
+        { name: 'instructions', placeholder: "Gemini answer and behaviour instructions", type: "textarea"}
+    ];
+
+    function restoreValues() {
+        const allInputs = document.querySelectorAll('.input_label, .input_label_textarea');
+        allInputs.forEach(input => {
+            input.value = localStorage.getItem(input.name) || '';
+        });
+    }
+
+    function checkInputs() {
+        const visibleInputs = Array.from(inputs).filter(i => i.style.display !== 'none');
+        const filled = visibleInputs.every(i => i.value.trim() !== '');
+        buttonNext.classList.toggle('active', filled);
+    }
+
+    function bindInputs() {
+        const allInputs = document.querySelectorAll('.input_label, .input_label_textarea');
+        allInputs.forEach(input => {
+            input.oninput = () => {
+                localStorage.setItem(input.name, input.value.trim());
+                checkInputs();
+            };
+        });
+    }
+
+    function goToApiStep() {
+        step = 1;
+        actionText.textContent = 'Enter your API keys';
+        actionText.className = 'action_text';
+
+        const container = document.querySelector('.input_labels');
+        container.innerHTML = '';
+
+        apiFields.forEach(field => {
+            const input = document.createElement('input');
+            input.type = 'text';
+            input.name = field.name;
+            input.placeholder = field.placeholder;
+            input.className = 'input_label';
+            container.appendChild(input);
+        })
+
+        buttonBack.style.display = 'none';
+        buttonNext.textContent = 'Next';
+        buttonNext.style.width = '';
+
+        restoreValues();
+        bindInputs();
+        checkInputs();
+    }
+
+    function goToImapStep() {
+        step = 2;
+        actionText.textContent = 'Enter additional required data';
+        actionText.className = 'action_imap_text';
+
+        const oldTextarea = document.querySelector('.input_label_textarea');
+        if (oldTextarea) oldTextarea.remove();
+
+        const container = document.querySelector('.input_labels');
+        container.innerHTML = '';
+
+        imapFields.forEach(field => {
+            if (field.type === 'textarea') {
+                const textarea = document.createElement('textarea');
+                textarea.name = field.name;
+                textarea.placeholder = field.placeholder;
+                textarea.className = 'input_label input_label_textarea';
+                container.appendChild(textarea);
+            } else {
+                const input = document.createElement('input');
+                input.type = 'text';
+                input.name = field.name;
+                input.placeholder = field.placeholder;
+                input.className = 'input_label';
+                container.appendChild(input);
+            }
+        });
+
+
+        buttonBack.style.display = 'flex';
+        buttonNext.textContent = 'Continue';
+        buttonNext.style.width = '110px';
+
+        restoreValues();
+        bindInputs();
+        checkInputs();
+    }
+
+    function submitData() {
+        const payload = {};
+
+        [...apiFields, ...imapFields].forEach(field => {
+            const val = localStorage.getItem(field.name);
+            if (val) payload[field.name] = val;
+        });
+
+        document.querySelector('.main_container').classList.add('hidden');
+        loadingOverlay.style.display = 'flex';
+
+        fetch('/newUser', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload),
+            credentials: 'include'
+        })
+        .then(r => r.json())
+        .then(result => {
+            if (result.success) {
+                Object.keys(payload).forEach(k => localStorage.removeItem(k));
+                window.location.reload();
+            } else {
+                console.error(result.error);
+            }
+        });
+    }
+
+    buttonNext.onclick = () => {
+        if (!buttonNext.classList.contains('active')) return;
+        step === 1 ? goToImapStep() : submitData();
+    };
+
+    buttonBack.onclick = goToApiStep;
+
+    restoreValues();
+    bindInputs();
+    checkInputs();
+</script>
+
+</body>
+</html>
